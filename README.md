@@ -14,7 +14,7 @@
 - [PyTorch](http://pytorch.org/) >= 1.1
 - [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.0 and [cuDNN](https://developer.nvidia.com/cudnn)
 
-The glove embeding files can be downloaded [here]() and unzipped to the data folder.
+The glove embeding files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ERbjWMCbY9FKv8TCv9efC4kBRXejz18NJreUyoRCxA6S5A?e=gFOs1Y) and unzipped to the data folder.
 
 Finally, the datasets folders will have the following structure:
 
