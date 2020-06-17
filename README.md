@@ -1,2 +1,90 @@
-# mt-captioning
-Multimodal Transformer for Image Captioning
+# Multimodal Transformer with Multi-View Visual Representation for Image Captioning
+
+## Table of Contents
+
+0. [Prerequisites](#Prerequisites)
+1. [Training](#Training)
+2. [Testing](#Testing)
+
+## Prerequisites
+
+#### Requirements
+
+- [Python 3](https://www.python.org/downloads/)
+- [PyTorch](http://pytorch.org/) >= 1.1
+- [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.0 and [cuDNN](https://developer.nvidia.com/cudnn)
+
+The glove embeding files can be downloaded [here]() and unzipped to the data folder.
+
+Finally, the datasets folders will have the following structure:
+
+```angular2html
+|-- data
+   |-- coco-train-glove-idxs.p
+   |-- coco-train-glove-words.p
+   |-- cocotalk-glove_label.h5
+   |-- cocotalk-glove.json
+   |-- glove_vocab.json
+   |-- glove_word_embeding_weight.npy
+```
+
+## Training
+
+The following script will train a model with cross-entropy loss :
+
+```bash
+$ python train.py --caption_model SVBase --input_att_dir <attention feature dir>  --ckpt_path <checkpoint_dir> --gpu_id 0
+```
+
+1. `caption_model` refers to the model while been trained, such as svbase, umv, umv3.
+
+2. `input_att_dir` refers to the dir of attention features.
+
+3. `ckpt_path` refers to the dir to save checkpoint.
+
+4. `gpu_id` refers to the gpu id.
+
+Based on the model trained with cross-entropy loss, the following script will load the pre-trained model and then fine-tune the model with self-critical loss:
+
+```bash
+$ python train.py --caption_model SVBase --learning_rate 1e-5 --ckpt_path <checkpoint_dir> --start_from <checkpoint_dir_rl> --gpu_id 0 --max_epochs 25
+```
+
+1. `caption_model` refers to the model while been trained.
+
+2. `learning_rate` refers to the learning rate use in self-critical.
+
+3. `input_att_dir` refers to the dir of attention features.
+
+4. `ckpt_path` refers to the dir to save checkpoint.
+
+5. `gpu_id` refers to the gpu id.
+
+## Testing
+
+Given the trained model, the following script will test the performance on the `val` split of MSCOCO:
+
+```bash
+$ python eval.py --model <checkpoint_dir>/model-best.pth --infos_path <checkpoint_dir>/infos.pkl --gpu_id 0
+```
+
+1. `model` refers to the path of model's checkpoint file.
+
+2. `infos_path` refers to the path of model's informations file.
+
+3. `gpu_id` refers to the gpu id.
+
+## Citation
+
+```
+@article{yu2019multimodal,
+  title={Multimodal transformer with multi-view visual representation for image captioning},
+  author={Yu, Jun and Li, Jing and Yu, Zhou and Huang, Qingming},
+  journal={IEEE Transactions on Circuits and Systems for Video Technology},
+  year={2019},
+  publisher={IEEE}
+}
+```
+
+## Acknowledgement
+We thank Ruotian Luo for his [self-critical.pytorch](https://github.com/ruotianluo/self-critical.pytorch), [cider](https://github.com/ruotianluo/cider/tree/e9b736d038d39395fa2259e39342bb876f1cc877) and [coco-caption](https://github.com/ruotianluo/coco-caption/tree/ea20010419a955fed9882f9dcc53f2dc1ac65092) repos.
