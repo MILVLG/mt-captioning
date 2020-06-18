@@ -1,5 +1,7 @@
 # Multimodal Transformer with Multi-View Visual Representation for Image Captioning
 
+This repository corresponds to the PyTorch implementation of [Multimodal Transformer with Multi-View Visual Representation for Image Captioning](https://arxiv.org/abs/1905.07841v1). By using the commonly used bottom-up-attention visual features, a single svbase model delivers 130.9 Cider on the Kapathy's test split of MSCOCO dataset. Please check our paper for details.
+
 ## Table of Contents
 
 0. [Prerequisites](#Prerequisites)
@@ -45,7 +47,7 @@ Finally, the datasets folders will have the following structure:
 The following script will train a model with cross-entropy loss :
 
 ```bash
-$ python train.py --caption_model SVBase --ckpt_path <checkpoint_dir> --gpu_id 0
+$ python train.py --caption_model svbase --ckpt_path <checkpoint_dir> --gpu_id 0
 ```
 
 1. `caption_model` refers to the model while been trained, such as svbase, umv, umv3.
@@ -57,7 +59,7 @@ $ python train.py --caption_model SVBase --ckpt_path <checkpoint_dir> --gpu_id 0
 Based on the model trained with cross-entropy loss, the following script will load the pre-trained model and then fine-tune the model with self-critical loss:
 
 ```bash
-$ python train.py --caption_model SVBase --learning_rate 1e-5 --ckpt_path <checkpoint_dir> --start_from <checkpoint_dir_rl> --gpu_id 0 --max_epochs 25
+$ python train.py --caption_model svbase --learning_rate 1e-5 --ckpt_path <checkpoint_dir> --start_from <checkpoint_dir_rl> --gpu_id 0 --max_epochs 25
 ```
 
 1. `caption_model` refers to the model while been trained.

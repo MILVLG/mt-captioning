@@ -9,10 +9,10 @@ import time
 import os
 from six.moves import cPickle
 
-import opts
+import utils.opts as opts
 import models
-from dataloader import *
-import eval_utils
+from utils.dataloader import *
+import utils.eval_utils as eval_utils
 import argparse
 import misc.utils as utils
 import torch

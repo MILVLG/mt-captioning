@@ -12,12 +12,10 @@ import torch
 from .svbase import SVBase
 from .umv3 import UMV3
 def setup(opt):
-    if opt.caption_model == 'SVBase':
+    if opt.caption_model == 'svbase':
         model = SVBase(opt)
     elif opt.caption_model == 'umv':
         model = UMV(opt)
-    elif opt.caption_model == 'umv3':
-        model = UMV3(opt)
     else:
         raise Exception("Caption model not supported: {}".format(opt.caption_model))
 

@@ -14,11 +14,11 @@ import time
 import os
 from six.moves import cPickle
 
-import opts
+import utils.opts as opts
 import models
-from dataloader import *
+from utils.dataloader import *
 import torch.utils.tensorboard as td
-import eval_utils
+import utils.eval_utils as eval_utils
 import misc.utils as utils
 from misc.rewards import init_cider_scorer, get_self_critical_reward, get_self_critical_cider_bleu_reward, init_bleu_scorer
 
@@ -92,7 +92,7 @@ def train(opt):
     loss_sum = 0
 
     while True:
-        if opt.self_critical_after != -1 and epoch >= opt.self_critical_after and update_lr_flag and opt.caption_model in ['AMV','SVBaseRDPE','SVBaseGP','transformer','NewTransformer','transformerMI' ,'transformerglove', 'SVBase']:
+        if opt.self_critical_after != -1 and epoch >= opt.self_critical_after and update_lr_flag and opt.caption_model in ['svbase' ,'umv']:
             print('start self critical')
             if epoch >= 15 and epoch <20 and opt.learning_rate_decay_start >= 0:
                 opt.current_lr = opt.learning_rate
