@@ -27,7 +27,7 @@ parser.add_argument('--cnn_model', type=str,  default='resnet101',
 parser.add_argument('--infos_path', type=str, default='log_transformer/infos_transformer.pkl',
                 help='path to infos to evaluate')
 # Basic options
-parser.add_argument('--batch_size', type=int, default=0,
+parser.add_argument('--batch_size', type=int, default=10,
                 help='if > 0 then overrule, otherwise load from checkpoint.')
 parser.add_argument('--num_images', type=int, default=5000,
                 help='how many images to use when periodically evaluating the loss? (-1 = all)')
@@ -43,7 +43,7 @@ parser.add_argument('--dump_path', type=int, default=0,
 # Sampling options
 parser.add_argument('--sample_max', type=int, default=1,
                 help='1 = sample argmax words. 0 = sample from distributions.')
-parser.add_argument('--beam_size', type=int, default=1,
+parser.add_argument('--beam_size', type=int, default=5,
                 help='used when sample_max = 1, indicates number of beams in beam search. Usually 2 or 3 works well. More is not better. Set this to 1 for faster runtime but a bit worse performance.')
 parser.add_argument('--temperature', type=float, default=1.0,
                 help='temperature when sampling from distributions (i.e. when sample_max = 0). Lower = "safer" predictions.')
@@ -53,16 +53,14 @@ parser.add_argument('--image_folder', type=str, default='',
 parser.add_argument('--image_root', type=str, default='', 
                 help='In case the image paths have to be preprended with a root path to an image folder')
 # For evaluation on MSCOCO images from some split:
-parser.add_argument('--input_att_dir', type=str, default='/data/features/mscoco/detfeat_resnet101_bbox101',
+parser.add_argument('--image_feat_dir', type=str, default='datasets/mscoco/features/frcn-r101',
                 help='path to the h5file containing the preprocessed dataset')
-parser.add_argument('--input_label_h5', type=str, default='data/cocotalk-glove_label.h5',
+parser.add_argument('--input_label_h5', type=str, default='datasets/mscoco/annotations/cocotalk_label.h5',
                 help='path to the h5file containing the preprocessed dataset')
-parser.add_argument('--input_json', type=str, default='data/cocotalk-glove.json', 
+parser.add_argument('--input_json', type=str, default='datasets/mscoco/annotations/cocotalk.json', 
                 help='path to the json file containing additional info and vocab. empty = fetch from model checkpoint.')
 parser.add_argument('--split', type=str, default='test',
                 help='if running on MSCOCO images, which split to use: val|test|train')
-parser.add_argument('--coco_json', type=str, default='data/instances_val2014.json', 
-                help='if nonempty then use this file in DataLoaderRaw (see docs there). Used only in MSCOCO test evaluation, where we have a specific json file of only test set images.')
 # misc
 parser.add_argument('--id', type=str, default='', 
                 help='an id identifying this run/job. used only if language_eval = 1 for appending to intermediate files')
@@ -75,8 +73,8 @@ with open(opt.infos_path, 'rb') as f:
     infos = cPickle.load(f, encoding='latin-1')
 
 # override and collect parameters
-if len(opt.input_att_dir) == 0:
-    opt.input_att_dir = infos['opt'].input_att_dir
+if len(opt.image_feat_dir) == 0:
+    opt.image_feat_dir = infos['opt'].image_feat_dir
     opt.input_label_h5 = infos['opt'].input_label_h5
 if len(opt.input_json) == 0:
     opt.input_json = infos['opt'].input_json
@@ -84,7 +82,7 @@ if opt.batch_size == 0:
     opt.batch_size = infos['opt'].batch_size
 if len(opt.id) == 0:
     opt.id = infos['opt'].id
-ignore = ["id", "batch_size", "beam_size", "start_from", "language_eval", "input_att_dir", "gpu_id"]
+ignore = ["id", "batch_size", "beam_size", "start_from", "language_eval", "image_feat_dir", "gpu_id", "input_json", "input_label_h5"]
 for k in vars(infos['opt']).keys():
     if k not in ignore:
         if k in vars(opt):

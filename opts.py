@@ -6,11 +6,11 @@ def parse_opt():
     parser.add_argument('--gpu_id', type=str, default='0',
                     help='gpu id')
 
-    parser.add_argument('--input_json', type=str, default='data/cocotalk.json',
+    parser.add_argument('--input_json', type=str, default='datasets/mscoco/annotations/cocotalk.json',
                     help='path to the json file containing additional info and vocab')
-    parser.add_argument('--image_feat_dir', type=str, default='/datasets/mscoco/frcn-r101',
-                    help='path to the directory containing the preprocessed att feats')
-    parser.add_argument('--input_label_h5', type=str, default='data/cocotalk_label.h5',
+    parser.add_argument('--image_feat_dir', type=str, default='datasets/mscoco/features/frcn-r101',
+                    help='path to the directory containing the preprocessed image feats')
+    parser.add_argument('--input_label_h5', type=str, default='datasets/mscoco/annotations/cocotalk_label.h5',
                     help='path to the h5file containing the preprocessed dataset')
     parser.add_argument('--start_from', type=str, default=None,
                     help="""continue training from saved model at this path. Path must contain files saved by previous training process: 
@@ -125,7 +125,7 @@ def parse_opt():
     parser.add_argument('--reduce_on_plateau', action='store_true',
                         help='')
 
-    parser.add_argument('--embed_weight_file', default='data/glove_embeding.npy', type=str, help='file path of embeding weight file')
+    parser.add_argument('--embed_weight_file', default='datasets/mscoco/annotations/glove_embeding.npy', type=str, help='file path of embeding weight file')
     parser.add_argument('--embed_weight_requires_grad',action='store_true', help='requires_grad of embed weight')
 
     parser.add_argument('--newnoamopt_warmup', type=int, default=2,

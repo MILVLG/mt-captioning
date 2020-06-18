@@ -14,27 +14,30 @@
 - [PyTorch](http://pytorch.org/) >= 1.1
 - [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.0 and [cuDNN](https://developer.nvidia.com/cudnn)
 
-The data files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ERbjWMCbY9FKv8TCv9efC4kBRXejz18NJreUyoRCxA6S5A?e=gFOs1Y) and unzipped to the data folder.
+The annotations files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ERbjWMCbY9FKv8TCv9efC4kBRXejz18NJreUyoRCxA6S5A?e=gFOs1Y) and unzipped to the datasets folder.
 
 The bottom up features can be extracted by ours [bottom-up-attention](https://github.com/MILVLG/bottom-up-attention.pytorch) repo.
 
 Finally, the datasets folders will have the following structure:
 
 ```angular2html
-|-- data
-   |-- coco-train-idxs.p
-   |-- coco-train-words.p
-   |-- cocotalk_label.h5
-   |-- cocotalk.json
-   |-- vocab.json
-   |-- glove_embeding.npy
-
 |-- datasets
    |-- mscoco
-      |-- frcn-r101
-         |-- train2014
-         |-- val2014
-         |-- test2015
+   |  |-- features
+   |  |  |-- frcn-r101
+   |  |  |  |-- train2014
+   |  |  |  |  |-- COCO_train2014_....npz
+   |  |  |  |-- val2014
+   |  |  |  |  |-- COCO_val2014_....npz
+   |  |  |  |-- test2015
+   |  |  |  |  |-- COCO_test2015_....npz
+   |  |-- annotations
+   |  |  |-- coco-train-idxs.p
+   |  |  |-- coco-train-words.p
+   |  |  |-- cocotalk_label.h5
+   |  |  |-- cocotalk.json
+   |  |  |-- vocab.json
+   |  |  |-- glove_embeding.npy
 ```
 
 ## Training
