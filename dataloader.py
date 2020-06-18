@@ -82,7 +82,7 @@ class Dataset(data.Dataset):
         self.seq_per_img = opt.seq_per_img
         
         # feature related options
-        self.use_fc = getattr(opt, 'use_fc', True)
+        self.use_fc = getattr(opt, 'use_fc', False)
         self.use_att = getattr(opt, 'use_att', True)
         self.use_box = getattr(opt, 'use_box', 0)
         self.norm_att_feat = getattr(opt, 'norm_att_feat', 0)
@@ -97,7 +97,7 @@ class Dataset(data.Dataset):
             print('vocab size is ', self.vocab_size)
         
         # open the hdf5 file
-        print('DataLoader loading h5 file: ', opt.input_fc_dir, opt.input_att_dir, opt.input_label_h5)
+        print('DataLoader loading h5 file: ', opt.image_feat_dir, opt.input_label_h5)
         """
         Setting input_label_h5 to none is used when only doing generation.
         For example, when you need to test on coco test set.
@@ -116,7 +116,7 @@ class Dataset(data.Dataset):
             self.seq_length = 1
 
         # self.fc_loader = HybridLoader(self.opt.input_fc_dir, '.npy')
-        self.att_loader = HybridLoader(self.opt.input_att_dir, '.npz')
+        self.att_loader = HybridLoader(self.opt.image_feat_dir, '.npz')
         # self.box_loader = HybridLoader(self.opt.input_att_dir, '.npz')['']
 
         self.num_images = len(self.info['images']) # self.label_start_ix.shape[0]

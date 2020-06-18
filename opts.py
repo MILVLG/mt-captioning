@@ -6,13 +6,11 @@ def parse_opt():
     parser.add_argument('--gpu_id', type=str, default='0',
                     help='gpu id')
 
-    parser.add_argument('--input_json', type=str, default='data/cocotalk-glove.json',
+    parser.add_argument('--input_json', type=str, default='data/cocotalk.json',
                     help='path to the json file containing additional info and vocab')
-    parser.add_argument('--input_fc_dir', type=str, default='/data/features/mscoco/detfeat_resnet152',
-                    help='path to the directory containing the preprocessed fc feats')
-    parser.add_argument('--input_att_dir', type=str, default='/data/features/mscoco/detfeat_resnet101_bbox101',
+    parser.add_argument('--image_feat_dir', type=str, default='/datasets/mscoco/frcn-r101',
                     help='path to the directory containing the preprocessed att feats')
-    parser.add_argument('--input_label_h5', type=str, default='data/cocotalk-glove_label.h5',
+    parser.add_argument('--input_label_h5', type=str, default='data/cocotalk_label.h5',
                     help='path to the h5file containing the preprocessed dataset')
     parser.add_argument('--start_from', type=str, default=None,
                     help="""continue training from saved model at this path. Path must contain files saved by previous training process: 
@@ -21,7 +19,7 @@ def parse_opt():
                                               Note: this file contains absolute paths, be careful when moving files around;
                         'model.ckpt-*'      : file(s) with model definition (created by tf)
                     """)
-    parser.add_argument('--cached_tokens', type=str, default='coco-train-glove-idxs',
+    parser.add_argument('--cached_tokens', type=str, default='coco-train-idxs',
                     help='Cached token file for calculating cider score during self critical training.')
 
     # Model settings
@@ -127,7 +125,7 @@ def parse_opt():
     parser.add_argument('--reduce_on_plateau', action='store_true',
                         help='')
 
-    parser.add_argument('--embed_weight_file', default='data/glove_word_embeding_weight.npy', type=str, help='file path of embeding weight file')
+    parser.add_argument('--embed_weight_file', default='data/glove_embeding.npy', type=str, help='file path of embeding weight file')
     parser.add_argument('--embed_weight_requires_grad',action='store_true', help='requires_grad of embed weight')
 
     parser.add_argument('--newnoamopt_warmup', type=int, default=2,

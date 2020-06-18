@@ -53,8 +53,6 @@ parser.add_argument('--image_folder', type=str, default='',
 parser.add_argument('--image_root', type=str, default='', 
                 help='In case the image paths have to be preprended with a root path to an image folder')
 # For evaluation on MSCOCO images from some split:
-parser.add_argument('--input_fc_dir', type=str, default='/data/features/mscoco/detfeat_resnet152',
-                help='path to the h5file containing the preprocessed dataset')
 parser.add_argument('--input_att_dir', type=str, default='/data/features/mscoco/detfeat_resnet101_bbox101',
                 help='path to the h5file containing the preprocessed dataset')
 parser.add_argument('--input_label_h5', type=str, default='data/cocotalk-glove_label.h5',
@@ -78,7 +76,6 @@ with open(opt.infos_path, 'rb') as f:
 
 # override and collect parameters
 if len(opt.input_att_dir) == 0:
-    opt.input_fc_dir = infos['opt'].input_fc_dir
     opt.input_att_dir = infos['opt'].input_att_dir
     opt.input_label_h5 = infos['opt'].input_label_h5
 if len(opt.input_json) == 0:
@@ -87,7 +84,7 @@ if opt.batch_size == 0:
     opt.batch_size = infos['opt'].batch_size
 if len(opt.id) == 0:
     opt.id = infos['opt'].id
-ignore = ["id", "batch_size", "beam_size", "start_from", "language_eval", "input_att_dir", "input_fc_dir", "gpu_id"]
+ignore = ["id", "batch_size", "beam_size", "start_from", "language_eval", "input_att_dir", "gpu_id"]
 for k in vars(infos['opt']).keys():
     if k not in ignore:
         if k in vars(opt):

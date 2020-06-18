@@ -90,7 +90,6 @@ def train(opt):
     params = list(model.named_parameters())
     grad_norm = np.zeros(len(params))
     loss_sum = 0
-    log_nums = 0
 
     while True:
         if opt.self_critical_after != -1 and epoch >= opt.self_critical_after and update_lr_flag and opt.caption_model in ['AMV','SVBaseRDPE','SVBaseGP','transformer','NewTransformer','transformerMI' ,'transformerglove', 'SVBase']:
@@ -111,10 +110,12 @@ def train(opt):
         # If start self critical training
         if opt.self_critical_after != -1 and epoch >= opt.self_critical_after:
             sc_flag = True
+            opt.embed_weight_requires_grad = True
             init_cider_scorer(opt.cached_tokens)
             init_bleu_scorer()
         else:
             sc_flag = False
+            opt.embed_weight_requires_grad = False
 
 
         start = time.time()
@@ -144,20 +145,6 @@ def train(opt):
             norm_v = torch.norm(params[grad_wt][1].grad).cpu().data.numpy() if params[grad_wt][
                                                                                    1].grad is not None else 0
             grad_norm[grad_wt] += norm_v
-
-        if iteration in [100, 300, 500, 1000, 2000]:
-            LOGFILE_PATH = os.path.join(opt.ckpt_path, 'log_run.txt'.format(log_nums))
-            LOGFILE = open(LOGFILE_PATH, 'a+')
-            LOGFILE.write('iter = ' + str(iteration) +
-                          '  loss = ' + str(loss_sum / iteration) +
-                          '\n')
-            for grad_wt in range(len(params)):
-                LOGFILE.write('Param %-3s Name %-80s Grad_Norm %-25s\n' %
-                              (str(grad_wt),
-                               params[grad_wt][0],
-                               str(grad_norm[grad_wt] / iteration)))
-            LOGFILE.write('\n')
-            LOGFILE.close()
             
         if not sc_flag:
             optimizer.step(epoch)
@@ -252,32 +239,18 @@ def train(opt):
                 histories['lr_history'] = lr_history
                 histories['ss_prob_history'] = ss_prob_history
                 with open(os.path.join(opt.ckpt_path, 'infos_'+opt.id+'.pkl'), 'wb') as f:
-                    cPickledump(infos, f)
+                    cPickle.dump(infos, f)
                 with open(os.path.join(opt.ckpt_path, 'histories_'+opt.id+'.pkl'), 'wb') as f:
-                    cPickledump(histories, f)
+                    cPickle.dump(histories, f)
 
                 if best_flag:
                     checkpoint_path = os.path.join(opt.ckpt_path, 'model-best.pth')
                     torch.save(model.state_dict(), checkpoint_path)
                     print("model saved to {}".format(checkpoint_path))
                     with open(os.path.join(opt.ckpt_path, 'infos_'+opt.id+'-best.pkl'), 'wb') as f:
-                        predictions.dump(infos, f)
-
-                LOGFILE_PATH = os.path.join(opt.ckpt_path, 'log_run{0}.txt'.format(log_nums))
-                LOGFILE = open(LOGFILE_PATH, 'w')
-                LOGFILE.write('iter = ' + str(iteration) +
-                              '  loss = ' + str(loss_sum / opt.save_checkpoint_every) +
-                              '\n')
-                for grad_wt in range(len(params)):
-                    LOGFILE.write('Param %-3s Name %-80s Grad_Norm %-25s\n' %
-                                  (str(grad_wt),
-                                   params[grad_wt][0],
-                                   str(grad_norm[grad_wt] / opt.save_checkpoint_every)))
-                LOGFILE.write('\n')
-                LOGFILE.close()
+                        cPickle.dump(infos, f)
                 loss_sum = 0
                 grad_norm = np.zeros(len(params))
-                log_nums += 1
 
         # Stop if reaching max epochs
         if epoch >= opt.max_epochs and opt.max_epochs != -1:

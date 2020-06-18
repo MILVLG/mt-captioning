@@ -14,18 +14,27 @@
 - [PyTorch](http://pytorch.org/) >= 1.1
 - [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.0 and [cuDNN](https://developer.nvidia.com/cudnn)
 
-The glove embeding files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ERbjWMCbY9FKv8TCv9efC4kBRXejz18NJreUyoRCxA6S5A?e=gFOs1Y) and unzipped to the data folder.
+The data files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ERbjWMCbY9FKv8TCv9efC4kBRXejz18NJreUyoRCxA6S5A?e=gFOs1Y) and unzipped to the data folder.
+
+The bottom up features can be extracted by ours [bottom-up-attention](https://github.com/MILVLG/bottom-up-attention.pytorch) repo.
 
 Finally, the datasets folders will have the following structure:
 
 ```angular2html
 |-- data
-   |-- coco-train-glove-idxs.p
-   |-- coco-train-glove-words.p
-   |-- cocotalk-glove_label.h5
-   |-- cocotalk-glove.json
-   |-- glove_vocab.json
-   |-- glove_word_embeding_weight.npy
+   |-- coco-train-idxs.p
+   |-- coco-train-words.p
+   |-- cocotalk_label.h5
+   |-- cocotalk.json
+   |-- vocab.json
+   |-- glove_embeding.npy
+
+|-- datasets
+   |-- mscoco
+      |-- frcn-r101
+         |-- train2014
+         |-- val2014
+         |-- test2015
 ```
 
 ## Training
@@ -33,16 +42,14 @@ Finally, the datasets folders will have the following structure:
 The following script will train a model with cross-entropy loss :
 
 ```bash
-$ python train.py --caption_model SVBase --input_att_dir <attention feature dir>  --ckpt_path <checkpoint_dir> --gpu_id 0
+$ python train.py --caption_model SVBase --ckpt_path <checkpoint_dir> --gpu_id 0
 ```
 
 1. `caption_model` refers to the model while been trained, such as svbase, umv, umv3.
 
-2. `input_att_dir` refers to the dir of attention features.
+2. `ckpt_path` refers to the dir to save checkpoint.
 
-3. `ckpt_path` refers to the dir to save checkpoint.
-
-4. `gpu_id` refers to the gpu id.
+3. `gpu_id` refers to the gpu id.
 
 Based on the model trained with cross-entropy loss, the following script will load the pre-trained model and then fine-tune the model with self-critical loss:
 
@@ -54,11 +61,9 @@ $ python train.py --caption_model SVBase --learning_rate 1e-5 --ckpt_path <check
 
 2. `learning_rate` refers to the learning rate use in self-critical.
 
-3. `input_att_dir` refers to the dir of attention features.
+3. `ckpt_path` refers to the dir to save checkpoint.
 
-4. `ckpt_path` refers to the dir to save checkpoint.
-
-5. `gpu_id` refers to the gpu id.
+4. `gpu_id` refers to the gpu id.
 
 ## Testing
 
