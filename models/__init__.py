@@ -9,7 +9,7 @@ import numpy as np
 import misc.utils as utils
 import torch
 
-from .svbase import SVBase
+from .sv import SVBase
 from .umv3 import UMV3
 def setup(opt):
     if opt.caption_model == 'svbase':
