@@ -14,12 +14,12 @@ import string
 import time
 import os
 import sys
-import misc.utils as utils
-from misc.beamSearchEvalEnsemble import *
+import utils
+from beamSearchEvalEnsemble import *
 
 def language_eval(dataset, preds, model_id, split):
     import sys
-    sys.path.append("coco-caption")
+    sys.path.append("3rdparty/coco-caption")
     annFile = 'coco-caption/annotations/captions_val2014.json'
     #annFile = 'coco-caption/annotations/captions_flickr30k.json'
     from pycocotools.coco import COCO

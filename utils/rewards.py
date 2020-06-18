@@ -12,9 +12,9 @@ import torch
 from torch.autograd import Variable
 
 import sys
-sys.path.append("cider")
+sys.path.append("3rdparty/cider")
 from pyciderevalcap.ciderD.ciderD import CiderD
-sys.path.append("coco-caption")
+sys.path.append("3rdparty/coco-caption")
 from pycocoevalcap.bleu.bleu import Bleu
 
 CiderD_scorer = None
