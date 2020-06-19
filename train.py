@@ -228,11 +228,7 @@ def train(opt):
                 # Dump miscalleous informations
                 infos['iter'] = iteration
                 infos['epoch'] = epoch
-                infos['iterators'] = loader.iters
-                infos['split_ix'] = loader..dataset.split_ix
-                infos['best_val_score'] = best_val_score
-                infos['opt'] = opt
-                infos['vocab'] = loader.get_vocab()
+                infos['loader_state_dict'] = loader.loader.state_dict()
 
                 histories['val_result_history'] = val_result_history
                 histories['loss_history'] = loss_history
@@ -288,11 +284,7 @@ def train(opt):
                 # Dump miscalleous informations
                 infos['iter'] = iteration
                 infos['epoch'] = epoch
-                infos['iterators'] = loader.iterators
-                infos['split_ix'] = loader.split_ix
-                infos['best_val_score'] = best_val_score
-                infos['opt'] = opt
-                infos['vocab'] = loader.get_vocab()
+                infos['loader_state_dict'] = loader.loader.state_dict()
 
                 histories['val_result_history'] = val_result_history
                 histories['loss_history'] = loss_history
