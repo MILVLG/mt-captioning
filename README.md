@@ -75,14 +75,12 @@ $ python train.py --caption_model svbase --learning_rate 1e-5 --ckpt_path <check
 Given the trained model, the following script will test the performance on the `val` split of MSCOCO:
 
 ```bash
-$ python test.py --model <checkpoint_dir>/model-best.pth --infos_path <checkpoint_dir>/infos.pkl --gpu_id 0
+$ python test.py --ckpt_path <checkpoint_dir> --gpu_id 0
 ```
 
-1. `model` refers to the path of model's checkpoint file.
+1. `ckpt_path` refers to the dir to save checkpoint.
 
-2. `infos_path` refers to the path of model's informations file.
-
-3. `gpu_id` refers to the gpu id.
+2. `gpu_id` refers to the gpu id.
 
 ## Citation
 

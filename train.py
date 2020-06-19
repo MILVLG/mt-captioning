@@ -42,15 +42,15 @@ def train(opt):
     histories = {}
     if opt.start_from is not None:
         # open old infos and check if models are compatible
-        with open(os.path.join(opt.start_from, 'infos_'+opt.id+'.pkl'), 'rb') as f:
+        with open(os.path.join(opt.start_from, 'infos.pkl'), 'rb') as f:
             infos = cPickle.load(f, encoding='latin-1')
             saved_model_opt = infos['opt']
             need_be_same=["caption_model", "rnn_type", "rnn_size", "num_layers", "embed_weight_file"]
             for checkme in need_be_same:
                 assert vars(saved_model_opt)[checkme] == vars(opt)[checkme], "Command line argument and saved model disagree on '%s' " % checkme
 
-        if os.path.isfile(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl')):
-            with open(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl'), 'rb') as f:
+        if os.path.isfile(os.path.join(opt.start_from, 'histories.pkl')):
+            with open(os.path.join(opt.start_from, 'histories.pkl'), 'rb') as f:
                 histories = cPickle.load(f, encoding='latin-1')
 
 
@@ -234,16 +234,16 @@ def train(opt):
                 histories['loss_history'] = loss_history
                 histories['lr_history'] = lr_history
                 histories['ss_prob_history'] = ss_prob_history
-                with open(os.path.join(opt.ckpt_path, 'infos_'+opt.id+'.pkl'), 'wb') as f:
+                with open(os.path.join(opt.ckpt_path, 'infos.pkl'), 'wb') as f:
                     cPickle.dump(infos, f)
-                with open(os.path.join(opt.ckpt_path, 'histories_'+opt.id+'.pkl'), 'wb') as f:
+                with open(os.path.join(opt.ckpt_path, 'histories_.pkl'), 'wb') as f:
                     cPickle.dump(histories, f)
 
                 if best_flag:
                     checkpoint_path = os.path.join(opt.ckpt_path, 'model-best.pth')
                     torch.save(model.state_dict(), checkpoint_path)
                     print("model saved to {}".format(checkpoint_path))
-                    with open(os.path.join(opt.ckpt_path, 'infos_'+opt.id+'-best.pkl'), 'wb') as f:
+                    with open(os.path.join(opt.ckpt_path, 'infos-best.pkl'), 'wb') as f:
                         cPickle.dump(infos, f)
                 loss_sum = 0
                 grad_norm = np.zeros(len(params))
@@ -290,16 +290,16 @@ def train(opt):
                 histories['loss_history'] = loss_history
                 histories['lr_history'] = lr_history
                 histories['ss_prob_history'] = ss_prob_history
-                with open(os.path.join(opt.ckpt_path, 'infos_'+opt.id+'.pkl'), 'wb') as f:
+                with open(os.path.join(opt.ckpt_path, 'infos.pkl'), 'wb') as f:
                     cPickle.dump(infos, f)
-                with open(os.path.join(opt.ckpt_path, 'histories_'+opt.id+'.pkl'), 'wb') as f:
+                with open(os.path.join(opt.ckpt_path, 'histories.pkl'), 'wb') as f:
                     cPickle.dump(histories, f)
 
                 if best_flag:
                     checkpoint_path = os.path.join(opt.ckpt_path, 'model-best.pth')
                     torch.save(model.state_dict(), checkpoint_path)
                     print("model saved to {}".format(checkpoint_path))
-                    with open(os.path.join(opt.ckpt_path, 'infos_'+opt.id+'-best.pkl'), 'wb') as f:
+                    with open(os.path.join(opt.ckpt_path, 'infos-best.pkl'), 'wb') as f:
                         cPickle.dump(infos, f)
             break
         if sc_flag:

@@ -12,7 +12,7 @@ import copy
 import math
 import numpy as np
 
-from .CaptionModel import CaptionModel
+from .BeamSearch import BeamSearch
 
 
 class EncoderDecoder(nn.Module):
@@ -269,7 +269,7 @@ class LSTMEncoding(nn.Module):
         output, _ = self.encoding_lstm(x, (h0, c0))
         return self.dropout(output)
 
-class UMV(CaptionModel):
+class UMV(BeamSearch):
 
     def make_model(self, src_vocab, tgt_vocab, N=6,
                    d_model=512, d_ff=2048, h=8, dropout=0.1, glove_size=300):

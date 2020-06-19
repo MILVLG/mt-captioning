@@ -20,12 +20,8 @@ import torch
 # Input arguments and options
 parser = argparse.ArgumentParser()
 # Input paths
-parser.add_argument('--model', type=str, default='log_transformer/model.pth',
-                help='path to model to evaluate')
-parser.add_argument('--cnn_model', type=str,  default='resnet101',
-                help='resnet101, resnet152')
-parser.add_argument('--infos_path', type=str, default='log_transformer/infos_transformer.pkl',
-                help='path to infos to evaluate')
+parser.add_argument('--ckpt_path', type=str, default='log_svbase',
+                help='path to model dir to evaluate')
 # Basic options
 parser.add_argument('--batch_size', type=int, default=10,
                 help='if > 0 then overrule, otherwise load from checkpoint.')
@@ -69,7 +65,7 @@ parser.add_argument('--gpu_id', type=str, default='0',
 opt = parser.parse_args()
 os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu_id
 # Load infos
-with open(opt.infos_path, 'rb') as f:
+with open(os.path.join(opt.ckpt_path, 'infos-best.pkl'), 'rb') as f:
     infos = cPickle.load(f, encoding='latin-1')
 
 # override and collect parameters
@@ -94,7 +90,7 @@ vocab = infos['vocab'] # ix -> word mapping
 
 # Setup the model
 model = models.setup(opt)
-model.load_state_dict(torch.load(opt.model))
+model.load_state_dict(torch.load(os.path.join(opt.ckpt_path, "model-best.pth")))
 model.cuda()
 model.eval()
 crit = utils.LanguageModelCriterion()
