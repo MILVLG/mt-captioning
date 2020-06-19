@@ -13,8 +13,8 @@ This repository corresponds to the PyTorch implementation of [Multimodal Transfo
 #### Requirements
 
 - [Python 3](https://www.python.org/downloads/)
-- [PyTorch](http://pytorch.org/) >= 1.1
-- [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.0 and [cuDNN](https://developer.nvidia.com/cudnn)
+- [PyTorch](http://pytorch.org/) >= 1.4.0
+- [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.2 and [cuDNN](https://developer.nvidia.com/cudnn)
 
 The annotations files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ES91VBvL885MvEVSXeozrXEBRdeQcvj0OplbE2ujooMylQ?e=mRSClL) and unzipped to the datasets folder.
 
