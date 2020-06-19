@@ -228,7 +228,7 @@ def train(opt):
                 # Dump miscalleous informations
                 infos['iter'] = iteration
                 infos['epoch'] = epoch
-                infos['loader_state_dict'] = loader.loader.state_dict()
+                infos['loader_state_dict'] = loader.state_dict()
 
                 histories['val_result_history'] = val_result_history
                 histories['loss_history'] = loss_history
@@ -284,7 +284,7 @@ def train(opt):
                 # Dump miscalleous informations
                 infos['iter'] = iteration
                 infos['epoch'] = epoch
-                infos['loader_state_dict'] = loader.loader.state_dict()
+                infos['loader_state_dict'] = loader.state_dict()
 
                 histories['val_result_history'] = val_result_history
                 histories['loss_history'] = loss_history
