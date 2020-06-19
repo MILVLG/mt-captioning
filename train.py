@@ -19,8 +19,8 @@ import models
 from utils.dataloader import *
 import torch.utils.tensorboard as td
 import utils.eval_utils as eval_utils
-import misc.utils as utils
-from misc.rewards import init_cider_scorer, get_self_critical_reward, get_self_critical_cider_bleu_reward, init_bleu_scorer
+import utils.utils as utils
+from utils.rewards import init_cider_scorer, get_self_critical_reward, get_self_critical_cider_bleu_reward, init_bleu_scorer
 
 opt = opts.parse_opt()
 os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu_id
@@ -228,8 +228,8 @@ def train(opt):
                 # Dump miscalleous informations
                 infos['iter'] = iteration
                 infos['epoch'] = epoch
-                infos['iterators'] = loader.iterators
-                infos['split_ix'] = loader.split_ix
+                infos['iterators'] = loader.iters
+                infos['split_ix'] = loader..dataset.split_ix
                 infos['best_val_score'] = best_val_score
                 infos['opt'] = opt
                 infos['vocab'] = loader.get_vocab()

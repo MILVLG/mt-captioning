@@ -10,7 +10,7 @@ import misc.utils as utils
 import torch
 
 from .sv import SVBase
-from .umv3 import UMV3
+from .umv import UMV
 def setup(opt):
     if opt.caption_model == 'svbase':
         model = SVBase(opt)

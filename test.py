@@ -14,7 +14,7 @@ import models
 from utils.dataloader import *
 import utils.eval_utils as eval_utils
 import argparse
-import misc.utils as utils
+import utils.utils as utils
 import torch
 
 # Input arguments and options

@@ -15,7 +15,6 @@ import time
 import os
 import sys
 import utils
-from beamSearchEvalEnsemble import *
 
 def language_eval(dataset, preds, model_id, split):
     import sys
@@ -133,70 +132,3 @@ def eval_split(model, loader, eval_kwargs={}):
     # Switch back to training mode
     model.train()
     return loss_sum/loss_evals, predictions, lang_stats
-
-
-def eval_split_ensemble(model_list, loader, eval_kwargs={}):
-    verbose = eval_kwargs.get('verbose', True)
-    num_images = eval_kwargs.get('num_images', eval_kwargs.get('val_images_use', -1))
-    split = eval_kwargs.get('split', 'val')
-    lang_eval = eval_kwargs.get('language_eval', 0)
-    dataset = eval_kwargs.get('dataset', 'coco')
-    beam_size = eval_kwargs.get('beam_size', 1)
-
-    # Make sure in the evaluation mode
-
-    loader.reset_iterator(split)
-
-    n = 0
-    predictions = []
-    while True:
-        data = loader.get_batch(split)
-        n = n + loader.batch_size
-        start = time.time()
-
-        # forward the model to also get generated samples for each image
-        # Only leave one feature for each image, in case duplicate sample
-        num_bbox, att_feats = data['num_bbox'][torch.arange(loader.batch_size) * loader.seq_per_img].cuda(), data['att_feats'][torch.arange(loader.batch_size) * loader.seq_per_img].cuda()
-        # forward the model to also get generated samples for each image
-        seq, _ = sample_beam(model_list, att_feats, num_bbox, opt=eval_kwargs)
-
-        # set_trace()
-        sents = utils.decode_sequence(loader.get_vocab(), seq)
-
-        for k, sent in enumerate(sents):
-            entry = {'image_id': data['infos'][k]['id'], 'caption': sent}
-            if eval_kwargs.get('dump_path', 0) == 1:
-                entry['file_name'] = data['infos'][k]['file_path']
-            predictions.append(entry)
-            if eval_kwargs.get('dump_images', 0) == 1:
-                # dump the raw image to vis/ folder
-                cmd = 'cp "' + os.path.join(eval_kwargs['image_root'],
-                                            data['infos'][k]['file_path']) + '" vis/imgs/img' + str(
-                    len(predictions)) + '.jpg'  # bit gross
-                print(cmd)
-                os.system(cmd)
-
-            if verbose:
-                print('image %s: %s' % (entry['image_id'], entry['caption']))
-
-        # if we wrapped around the split or used up val imgs budget then bail
-        ix0 = data['bounds']['it_pos_now']
-        ix1 = data['bounds']['it_max']
-        if num_images != -1:
-            ix1 = min(ix1, num_images)
-        for i in range(n - ix1):
-            predictions.pop()
-
-        if verbose:
-            print('each batch_size time:', time.time() - start)
-            print('evaluating validation preformance... %d/%d' % (ix0 - 1, ix1))
-
-        if data['bounds']['wrapped']:
-            break
-        if num_images >= 0 and n >= num_images:
-            break
-
-    lang_stats = None
-    if lang_eval == 1:
-        lang_stats = language_eval(dataset, predictions, eval_kwargs['id'], split)
-    return predictions, lang_stats
