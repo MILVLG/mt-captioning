@@ -12,7 +12,7 @@ import copy
 import math
 import numpy as np
 
-from .BeamSearch import BeamSearch
+from .beam_search import BeamSearch
 
 
 class EncoderDecoder(nn.Module):
