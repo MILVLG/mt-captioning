@@ -14,7 +14,7 @@ import string
 import time
 import os
 import sys
-import utils
+import utils.utils as utils
 
 def language_eval(dataset, preds, model_id, split):
     import sys

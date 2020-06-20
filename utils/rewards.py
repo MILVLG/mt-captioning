@@ -6,7 +6,7 @@ import copy
 
 import numpy as np
 import time
-import utils
+import utils.utils as utils
 from collections import OrderedDict
 import torch
 from torch.autograd import Variable
