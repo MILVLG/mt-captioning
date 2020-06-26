@@ -35,7 +35,7 @@ class HybridLoader:
         if self.ext == '.npy':
             self.loader = lambda x: np.load(x)
         else:
-            self.loader = lambda x: np.transpose(np.load(x)['x'], (1, 0))
+            self.loader = lambda x: np.load(x)['x']
         if db_path.endswith('.pth'): # Assume a key,value dictionary
             self.db_type = 'pth'
             self.feat_file = torch.load(db_path)
@@ -59,7 +59,7 @@ class HybridLoader:
         elif self.db_type == 'h5':
             f_input = h5py.File(self.db_path, 'r')[key]
         else:
-            f_input = os.path.join(self.db_path, split_path[split], "COCO_"+split_path[split]+"_{:012d}.jpg".format(int(key)) + self.ext)
+            f_input = os.path.join(self.db_path, split_path[split], "COCO_"+split_path[split]+"_{:012d}".format(int(key)) + self.ext)
 
         # load image
         feat = self.loader(f_input)

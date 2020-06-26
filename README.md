@@ -20,6 +20,16 @@ The annotations files can be downloaded [here](https://awma1-my.sharepoint.com/:
 
 The bottom up features can be extracted by ours [bottom-up-attention](https://github.com/MILVLG/bottom-up-attention.pytorch) repo.
 
+You can extract features using the following script:
+```
+# 1.extract the bbox of image
+$ python3 extract_features.py --mode caffe --config-file configs/bua-caffe/extract-bua-caffe-r101-bbox-only.yaml --image-dir <image_dir> --out-dir <bbox_dir> --resume
+
+# 2. extract the roi feature by bbox
+$ python3 extract_features.py --mode caffe --config-file configs/bua-caffe/extract-bua-caffe-r101-gt-bbox.yaml --image-dir <image_dir> --gt-bbox-dir <bbox_dir> --out-dir <output_dir> --resume
+```
+You can compare the extracted features with [the feature file](datasets/mscoco/features/val2014/COCO_val2014_000000000042.npz) provided by us to determine the correctness of the extracted features.
+
 Finally, the datasets folders will have the following structure:
 
 ```angular2html

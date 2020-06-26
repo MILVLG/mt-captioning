@@ -101,8 +101,6 @@ def parse_opt():
                     help='Do we load previous best score when resuming training.')
 
     # misc
-    parser.add_argument('--id', type=str, default='SVBase',
-                    help='an id identifying this run/job. used in cross-val and appended when writing progress files')
     parser.add_argument('--train_only', type=int, default=0,
                     help='if true then use 80k, else use 110k')
 
