@@ -288,7 +288,7 @@ class LSTMEncoding(nn.Module):
         output, _ = self.encoding_lstm(x, (h0, c0))
         return self.dropout(output)
 
-class SVBase(BeamSearch):
+class SV(BeamSearch):
 
     def make_model(self, src_vocab, tgt_vocab, N=6,
                    d_model=512, d_ff=2048, h=8, dropout=0.1, glove_size=300):
@@ -313,7 +313,7 @@ class SVBase(BeamSearch):
         return model
 
     def __init__(self, opt):
-        super(SVBase, self).__init__()
+        super(SV, self).__init__()
         self.opt = opt
         self.embed_weight_file = opt.embed_weight_file
         self.embed_weight_requires_grad = opt.embed_weight_requires_grad

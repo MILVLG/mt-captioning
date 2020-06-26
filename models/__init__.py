@@ -9,11 +9,11 @@ import numpy as np
 import utils.utils as utils
 import torch
 
-from .sv import SVBase
+from .sv import SV
 from .umv import UMV
 def setup(opt):
     if opt.caption_model == 'svbase':
-        model = SVBase(opt)
+        model = SV(opt)
     elif opt.caption_model == 'umv':
         model = UMV(opt)
     else:
