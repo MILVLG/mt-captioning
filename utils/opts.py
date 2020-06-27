@@ -23,8 +23,8 @@ def parse_opt():
                     help='Cached token file for calculating cider score during self critical training.')
 
     # Model settings
-    parser.add_argument('--caption_model', type=str, default="svbase",
-                    help='svbase, umv, umv3')
+    parser.add_argument('--caption_model', type=str, default="sv",
+                    help='sv, umv')
     parser.add_argument('--rnn_size', type=int, default=2048,
                     help='size of the rnn in number of hidden nodes in each layer')
     parser.add_argument('--num_layers', type=int, default=6,

@@ -55,6 +55,7 @@ parser.add_argument('--input_label_h5', type=str, default='datasets/mscoco/annot
                 help='path to the h5file containing the preprocessed dataset')
 parser.add_argument('--input_json', type=str, default='datasets/mscoco/annotations/cocotalk.json', 
                 help='path to the json file containing additional info and vocab. empty = fetch from model checkpoint.')
+parser.add_argument('--embed_weight_file', default='datasets/mscoco/annotations/glove_embeding.npy', type=str, help='file path of embeding weight file')
 parser.add_argument('--split', type=str, default='test',
                 help='if running on MSCOCO images, which split to use: val|test|train')
 # misc
@@ -78,7 +79,7 @@ if opt.batch_size == 0:
     opt.batch_size = infos['opt'].batch_size
 if len(opt.id) == 0:
     opt.id = infos['opt'].id
-ignore = ["id", "batch_size", "beam_size", "start_from", "language_eval", "image_feat_dir", "gpu_id", "input_json", "input_label_h5"]
+ignore = ["id", "batch_size", "beam_size", "start_from", "language_eval", "image_feat_dir", "gpu_id", "input_json", "input_label_h5", "embed_weight_file"]
 for k in vars(infos['opt']).keys():
     if k not in ignore:
         if k in vars(opt):

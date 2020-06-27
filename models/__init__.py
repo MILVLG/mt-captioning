@@ -12,7 +12,7 @@ import torch
 from .sv import SV
 from .umv import UMV
 def setup(opt):
-    if opt.caption_model == 'svbase':
+    if opt.caption_model == 'sv':
         model = SV(opt)
     elif opt.caption_model == 'umv':
         model = UMV(opt)
