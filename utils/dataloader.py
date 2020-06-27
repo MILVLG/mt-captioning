@@ -36,6 +36,7 @@ class HybridLoader:
             self.loader = lambda x: np.load(x)
         else:
             self.loader = lambda x: np.load(x)['x']
+            # self.loader = lambda x: np.transpose(np.load(x)['x'])
         if db_path.endswith('.pth'): # Assume a key,value dictionary
             self.db_type = 'pth'
             self.feat_file = torch.load(db_path)
@@ -65,6 +66,44 @@ class HybridLoader:
         feat = self.loader(f_input)
 
         return feat
+
+def load_feat(path1, path2):
+    t_file1 = np.load(path1)
+    t_file2 = np.load(path2)
+    t_att1 = t_file1['x']
+    t_att2 = t_file2['x']
+    # t_att1 = np.transpose(t_att1, (1, 0))
+    # t_att2 = np.transpose(t_att2, (1, 0))
+    num_bbox1 = t_att1.shape[0]
+    num_bbox2 = t_att2.shape[0]
+    att_feats = np.zeros((100, t_att1.shape[1]+t_att2.shape[1]))
+    
+    att_feats[:num_bbox1, :t_att1.shape[1]] = t_att1[:num_bbox1, :]
+    att_feats[:num_bbox2, t_att1.shape[1]:] = t_att2[:num_bbox2, :]
+    num_bbox = [num_bbox1, num_bbox2]
+    return att_feats, num_bbox
+
+class HybridLoaderv2:
+    """
+    If db_path is a director, then use normal file loading
+    If lmdb, then load from lmdb
+    The loading method depend on extention.
+    """
+    def __init__(self, db_path1, ext, db_path2=None):
+        self.db_path1 = db_path1
+        self.db_path2 = db_path2
+        self.ext = ext
+        self.loader = lambda x, y: load_feat(x, y)
+    
+    def get(self, key, split=''):
+
+        f_input1 = os.path.join(self.db_path1, split_path[split], "COCO_"+split_path[split]+"_{:012d}".format(int(key)) + self.ext)
+        f_input2 = os.path.join(self.db_path2, split_path[split], "COCO_"+split_path[split]+"_{:012d}".format(int(key)) + self.ext)
+
+        # load image
+        feat, num_bbox = self.loader(f_input1, f_input2)
+
+        return (feat, num_bbox)
 
 class Dataset(data.Dataset):
     
@@ -117,6 +156,9 @@ class Dataset(data.Dataset):
 
         # self.fc_loader = HybridLoader(self.opt.input_fc_dir, '.npy')
         self.att_loader = HybridLoader(self.opt.image_feat_dir, '.npz')
+        self.att2_loader = None
+        if len(self.opt.image_feat_dir2) != 0:
+            self.att2_loader = HybridLoaderv2(self.opt.image_feat_dir, '.npz', self.opt.image_feat_dir2)
         # self.box_loader = HybridLoader(self.opt.input_att_dir, '.npz')['']
 
         self.num_images = len(self.info['images']) # self.label_start_ix.shape[0]
@@ -177,15 +219,21 @@ class Dataset(data.Dataset):
 
         for sample in batch:
             # fetch image
-            tmp_fc, tmp_att, tmp_seq, \
-                ix, it_pos_now, tmp_wrapped = sample
+            if self.att2_loader is None:
+                tmp_fc, tmp_att, tmp_seq, \
+                    ix, it_pos_now, tmp_wrapped = sample
+                fc_batch.append(tmp_fc)
+                num_bbox_batch.append([tmp_att.shape[0]]*seq_per_img)
+            else:
+                tmp_num_box, tmp_att, tmp_seq, \
+                    ix, it_pos_now, tmp_wrapped = sample
+                num_bbox_batch.append([tmp_num_box]*seq_per_img)
+
             if tmp_wrapped:
                 wrapped = True
 
-            fc_batch.append(tmp_fc)
             att_batch.append(tmp_att)
-            num_bbox_batch.append([tmp_att.shape[0]]*seq_per_img)
-
+            
             tmp_label = np.zeros([seq_per_img, self.seq_length + 2], dtype = 'int')
             if hasattr(self, 'h5_label_file'):
                 # if there is ground truth
@@ -208,7 +256,11 @@ class Dataset(data.Dataset):
 
         data = {}
         # data['fc_feats'] = np.vstack(fc_batch)
-        data['num_bbox'] = np.stack(num_bbox_batch).flatten()
+        if self.att2_loader is None:
+            data['num_bbox'] = np.stack(num_bbox_batch).flatten()
+        else:
+            data['num_bbox'] = np.stack(num_bbox_batch).reshape(-1, 2)
+
         # merge att_feats
         max_att_len = max([i[0] for i in num_bbox_batch])
         data['att_feats'] = np.zeros([len(att_batch)*seq_per_img, 100, att_batch[0].shape[1]], dtype = 'float32')
@@ -245,9 +297,14 @@ class Dataset(data.Dataset):
         """
         ix, it_pos_now, wrapped = index #self.split_ix[index]
         if self.use_att:
-            att_feat = self.att_loader.get(str(self.info['images'][ix]['id']), self.info['images'][ix]['split'])
-            # Reshape to K x C
-            att_feat = att_feat.reshape(-1, att_feat.shape[-1])
+            if self.att2_loader is None:
+                att_feat = self.att_loader.get(str(self.info['images'][ix]['id']), self.info['images'][ix]['split'])
+                # Reshape to K x C
+                att_feat = att_feat.reshape(-1, att_feat.shape[-1])
+            else:
+                att_feat, num_bbox = self.att2_loader.get(str(self.info['images'][ix]['id']), self.info['images'][ix]['split'])
+                # Reshape to K x C
+                att_feat = att_feat.reshape(-1, att_feat.shape[-1])
         else:
             att_feat = np.zeros((0,0), dtype='float32')
         if self.use_fc:
@@ -264,7 +321,7 @@ class Dataset(data.Dataset):
             seq = None
         return (fc_feat,
                 att_feat, seq,
-                ix, it_pos_now, wrapped)
+                ix, it_pos_now, wrapped) if self.att2_loader is None else (num_bbox, att_feat, seq, ix, it_pos_now, wrapped)
 
     def __len__(self):
         return len(self.info['images'])

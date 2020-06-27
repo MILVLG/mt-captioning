@@ -10,6 +10,8 @@ def parse_opt():
                     help='path to the json file containing additional info and vocab')
     parser.add_argument('--image_feat_dir', type=str, default='datasets/mscoco/features/frcn-r101',
                     help='path to the directory containing the preprocessed image feats')
+    parser.add_argument('--image_feat_dir2', type=str, default='',
+                    help='path to the directory containing the preprocessed image feats')
     parser.add_argument('--input_label_h5', type=str, default='datasets/mscoco/annotations/cocotalk_label.h5',
                     help='path to the h5file containing the preprocessed dataset')
     parser.add_argument('--start_from', type=str, default=None,
@@ -101,6 +103,8 @@ def parse_opt():
                     help='Do we load previous best score when resuming training.')
 
     # misc
+    parser.add_argument('--id', type=str, default='SVBase',
+                    help='an id identifying this run/job. used in cross-val and appended when writing progress files')
     parser.add_argument('--train_only', type=int, default=0,
                     help='if true then use 80k, else use 110k')
 

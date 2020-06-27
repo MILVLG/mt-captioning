@@ -383,7 +383,7 @@ class UMV(BeamSearch):
         if seq is not None:
             # crop the last one
             seq = seq[:, :-1]
-            seq_mask = (seq.data > 0)
+            seq_mask = (seq.data > 0).long()
             seq_mask[:, 0] += 1
 
             seq_mask = seq_mask.unsqueeze(-2)
