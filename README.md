@@ -96,6 +96,14 @@ $ python test.py --ckpt_path <checkpoint_dir> --gpu_id 0
 
 2. `gpu_id` refers to the gpu id.
 
+## Pre-trained models
+
+We provided pre-trained models here.
+
+Model |  Backbone  | Bleu@1 | CIDEr | Meteor |Download
+:-:|:-:|:-:|:-:|:-:|:-:
+SV|ResNet-101|80.8|29.1|130.9|[model](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/EUakyWWLZ7dGkoO_bljASwABpKPNgKARbuiAyQvaA6dDYg?e=mQYtBy)
+
 ## Citation
 
 ```
