@@ -102,7 +102,7 @@ We provided pre-trained models here.
 
 Model |  Backbone  | Bleu@1 | CIDEr | Meteor |Download
 :-:|:-:|:-:|:-:|:-:|:-:
-SV|ResNet-101|80.8|29.1|130.9|[model](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/EUakyWWLZ7dGkoO_bljASwABpKPNgKARbuiAyQvaA6dDYg?e=mQYtBy)
+SV|ResNet-101|80.8|130.9|29.1|[model](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/EUakyWWLZ7dGkoO_bljASwABpKPNgKARbuiAyQvaA6dDYg?e=mQYtBy)
 
 ## Citation
 
