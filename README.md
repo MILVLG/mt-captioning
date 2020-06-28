@@ -1,6 +1,6 @@
-# Multimodal Transformer with Multi-View Visual Representation for Image Captioning
+# mt-captioning
 
-This repository corresponds to the PyTorch implementation of [Multimodal Transformer with Multi-View Visual Representation for Image Captioning](https://arxiv.org/abs/1905.07841v1). By using the commonly used bottom-up-attention visual features, a single svbase model delivers 130.9 Cider on the Kapathy's test split of MSCOCO dataset. Please check our paper for details.
+This repository corresponds to the PyTorch implementation of the paper *Multimodal Transformer with Multi-View Visual Representation for Image Captioning*. By using the bottom-up-attention visual features (with slight improvement), our single-view Multimodal Transformer model (MT_sv) delivers 130.9 CIDEr on the Kapathy's test split of MSCOCO dataset. Please check our [paper](https://arxiv.org/abs/1905.07841v1) for details.
 
 ## Table of Contents
 
@@ -16,13 +16,12 @@ This repository corresponds to the PyTorch implementation of [Multimodal Transfo
 - [PyTorch](http://pytorch.org/) >= 1.4.0
 - [Cuda](https://developer.nvidia.com/cuda-toolkit) >= 9.2 and [cuDNN](https://developer.nvidia.com/cudnn)
 
-The annotations files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ES91VBvL885MvEVSXeozrXEBRdeQcvj0OplbE2ujooMylQ?e=mRSClL) and unzipped to the datasets folder.
+The annotation files can be downloaded [here](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/ES91VBvL885MvEVSXeozrXEBRdeQcvj0OplbE2ujooMylQ?e=mRSClL) and unzipped to the datasets folder.
 
-The bottom up features can be extracted by ours [bottom-up-attention](https://github.com/MILVLG/bottom-up-attention.pytorch) repo.
+The visual features are extracted by our [bottom-up-attention.pytorch](https://github.com/MILVLG/bottom-up-attention.pytorch) repo using the following scripts:
 
-You can extract features using the following script:
 ```bash
-# 1.extract the bbox of image
+# 1.extract the bbox from the image
 $ python3 extract_features.py --mode caffe \
           --config-file configs/bua-caffe/extract-bua-caffe-r101-bbox-only.yaml \
           --image-dir <image_dir> --out-dir <bbox_dir> --resume
@@ -32,9 +31,11 @@ $ python3 extract_features.py --mode caffe \
          --config-file configs/bua-caffe/extract-bua-caffe-r101-gt-bbox.yaml \
          --image-dir <image_dir> --gt-bbox-dir <bbox_dir> --out-dir <output_dir> --resume
 ```
-You can compare the extracted features with [the feature file](datasets/mscoco/features/val2014/COCO_val2014_000000000042.npz) provided by us to determine the correctness of the extracted features.
+We provided a pre-extracted features in the `datasets/mscoco/features/val2014` folder for the image in `datasets/mscoco/image` to help validating the correctness of the extracted features.
 
-Finally, the datasets folders will have the following structure:
+We use the ResNet-101 as our backbone and extract features for the MSCOCO dataset to the `datasets/mscoco/features/frcn-r101` folder.
+
+Finally, the `datasets` folder will have the following structure:
 
 ```angular2html
 |-- datasets
@@ -42,11 +43,11 @@ Finally, the datasets folders will have the following structure:
    |  |-- features
    |  |  |-- frcn-r101
    |  |  |  |-- train2014
-   |  |  |  |  |-- COCO_train2014_....npz
+   |  |  |  |  |-- COCO_train2014_....jpg.npz
    |  |  |  |-- val2014
-   |  |  |  |  |-- COCO_val2014_....npz
+   |  |  |  |  |-- COCO_val2014_....jpg.npz
    |  |  |  |-- test2015
-   |  |  |  |  |-- COCO_test2015_....npz
+   |  |  |  |  |-- COCO_test2015_....jpg.npz
    |  |-- annotations
    |  |  |-- coco-train-idxs.p
    |  |  |-- coco-train-words.p
@@ -64,7 +65,7 @@ The following script will train a model with cross-entropy loss :
 $ python train.py --caption_model svbase --ckpt_path <checkpoint_dir> --gpu_id 0
 ```
 
-1. `caption_model` refers to the model while been trained, such as svbase, umv, umv3.
+1. `caption_model` refers to the model while been trained, such as `svbase` and `umv`
 
 2. `ckpt_path` refers to the dir to save checkpoint.
 
@@ -86,7 +87,7 @@ $ python train.py --caption_model svbase --learning_rate 1e-5 --ckpt_path <check
 
 ## Testing
 
-Given the trained model, the following script will test the performance on the `val` split of MSCOCO:
+Given the trained model, the following script will report the performance on the `val` split of MSCOCO:
 
 ```bash
 $ python test.py --ckpt_path <checkpoint_dir> --gpu_id 0
@@ -98,14 +99,15 @@ $ python test.py --ckpt_path <checkpoint_dir> --gpu_id 0
 
 ## Pre-trained models
 
-We provided pre-trained models here.
+We provided the pre-trained model for the single-view MT model at present. More models will be added in the future.
 
-Model |  Backbone  | Bleu@1 | CIDEr | Meteor |Download
+Model |  Backbone  | BLEU@1 | METEOR | CIDEr |Download
 :-:|:-:|:-:|:-:|:-:|:-:
-SV|ResNet-101|80.8|130.9|29.1|[model](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/EUakyWWLZ7dGkoO_bljASwABpKPNgKARbuiAyQvaA6dDYg?e=mQYtBy)
+MT_sv|ResNet-101|80.8|29.1|130.9|[model](https://awma1-my.sharepoint.com/:u:/g/personal/yuz_l0_tn/EUakyWWLZ7dGkoO_bljASwABpKPNgKARbuiAyQvaA6dDYg?e=mQYtBy)
 
 ## Citation
 
+If this repository is helpful for your research, we'd really appreciate it if you could cite the following paper:
 ```
 @article{yu2019multimodal,
   title={Multimodal transformer with multi-view visual representation for image captioning},
